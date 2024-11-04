@@ -1,7 +1,26 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
+import { DeploymentContext } from '../context/DeploymentContext';
+import Status from '../types/status';
 
-export default function ChangeStatus() {
+type ChangeStatusProps = {
+    unitName: string
+}
+export default function ChangeStatus({ unitName }: ChangeStatusProps) {
+    const deploymentContext = useContext(DeploymentContext);
+    const [index, setIndex] = useState(1);
+
+    if (!deploymentContext) {
+        throw new Error("ChangeStatus must be used within a DeploymentProvider");
+    }
+
+    const updateStatus = () => {
+
+        index < 2  ? setIndex(index + 1) : setIndex(0);
+
+        deploymentContext.setUnitStatus(unitName, Status[index]);
+    };
+    const { setUnitStatus } = deploymentContext;
   return (
-    <div>ChangeStatus</div>
+    <button onClick={() => updateStatus()}>פרוס את יחידת - {unitName}</button>
   )
 }
